@@ -42,6 +42,7 @@ const startServer = async() => {
                         console.log('Server closed the connection')
                     });
                 }
+                console.log(`Connecting ${users.length} socket clients started.`)
             }
         }catch(error){
             console.log(error)
