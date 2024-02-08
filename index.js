@@ -13,6 +13,10 @@ const startServer = async() => {
     app.use(bodyParser.json({limit: '2000mb'}))
     app.use(express.urlencoded({extended: true}));
 
+    function delay(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
     app.post('/aws/socket', async (req, res) => {
         try{
             const startId = req.body.startId
@@ -23,12 +27,14 @@ const startServer = async() => {
             const users = await db.query(inputQuery, [startId])
 
             if (users?.length){
-                for(const user of users ){
+                for(let index = 0; index<users.length; index++){
+                    console.log(index)
+                    await delay(100)
                     const options = {
                         transports: ['websocket'],
                         extraHeaders: {
-                        'token': `Bearer ${user.access_token}`,
-                        'userid': `${user.user_id}`
+                        'token': `Bearer ${users[index].access_token}`,
+                        'userid': `${users[index].user_id}`
                         }
                     }
                 
