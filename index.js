@@ -7,6 +7,7 @@ const db = require('./mysql-config')
 const PORT = 3030
 const cors = require('cors')
 const bodyParser = require('body-parser')
+const axios = require('axios');
 
 const startServer = async() => {
     app.use(cors())
@@ -55,8 +56,55 @@ const startServer = async() => {
         }
         res.send(`Connecting socket client started.`)
     })
-    
 
+    app.post('/aws/send/text', async (req, res) => {
+        try{
+            const senderId = req.body.senderId
+            const receiverId = req.body.receiverId
+            const limit = req.body.limit
+            const text = req.body.text
+
+            const apiUrl = 'https://galaxyyouknowsocial.net/chat-service/message/text'
+
+            const senderQuery = `SELECT user_id, access_token FROM user_info WHERE id >= ? LIMIT ${limit}`
+            const senders = await db.query(senderQuery, [senderId])
+
+            const receiverQuery = `SELECT user_id, access_token FROM user_info WHERE id >= ? LIMIT ${limit}`
+            const receivers = await db.query(receiverQuery, [receiverId])
+
+            const paramsList = []
+            for(let index = 0; index < senders.length; index++){
+                const params = {
+                data: {
+                    userId: `${senders[index].user_id}`,
+                    roomId: `${receivers[index].user_id}`,
+                    isGroup: false,
+                    text: `${text} (${index})`,
+                    uuid: "123456789",
+                    locale: 0,
+                    deviceStatus: "mobile"
+                },
+                header: {
+                    headers: {
+                    Authorization: `Bearer ${senders[index].access_token}`
+                    }
+                }
+                }
+                paramsList.push(params)
+            }
+
+            await Promise.all(paramsList.map(async (params) => {
+                const response = await axios.post(apiUrl, params.data, params.header);
+                return response.data;
+            }));
+
+            
+        }catch(error){
+            console.log(error)
+        }
+        res.send(`Send text message.`)
+    })
+    
     server.listen(PORT, () => {
         console.log(`Message service is running on port : ${PORT}`)
     }).on('error', (err) => {
