@@ -102,12 +102,10 @@ const startServer = async() => {
             //     return response.data;
             // }));
 
-            for(let index = 0; index < params.length; index++){
+            for(let index = 0; index < paramsList.length; index++){
                 await delay(100)
-                const response = await axios.post(apiUrl, params[index].data, params[index].header);
+                const response = await axios.post(apiUrl, paramsList[index].data, paramsList[index].header);
             }
-            
-
             
         }catch(error){
             console.log(error)
