@@ -9,6 +9,8 @@ const cors = require('cors')
 const bodyParser = require('body-parser')
 const axios = require('axios');
 
+var msgCount = 0
+
 const startServer = async() => {
     app.use(cors())
     app.use(bodyParser.json({limit: '2000mb'}))
@@ -42,7 +44,9 @@ const startServer = async() => {
                     const socket = io.connect(serverUrl, options)
                     
                     socket.on('CHAT_OPERATION_EVENT', (incommingMsg) => {
-                        console.log('Received message: ', incommingMsg.data.message[0].messageInfo[0].mediaData.content.data.text)
+                        msgCount++
+                        console.log(`${msgCount} -- ${incommingMsg.data.message[0].messageInfo[0].mediaData.content.data.text}`)
+                        // console.log('Received message: ', incommingMsg.data.message[0].messageInfo[0].mediaData.content.data.text)
                     });
                     
                     socket.on('disconnect', () => {
