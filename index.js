@@ -97,9 +97,8 @@ const startServer = async() => {
                 paramsList.push(params)
             }
 
-            await Promise.all(paramsList.map(async (params) => {
+            Promise.all(paramsList.map(async (params) => {
                 const response = await axios.post(apiUrl, params.data, params.header);
-                return response.data;
             }));
 
             // for(let index = 0; index < paramsList.length; index++){
