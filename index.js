@@ -97,15 +97,15 @@ const startServer = async() => {
                 paramsList.push(params)
             }
 
-            // await Promise.all(paramsList.map(async (params) => {
-            //     const response = await axios.post(apiUrl, params.data, params.header);
-            //     return response.data;
-            // }));
+            await Promise.all(paramsList.map(async (params) => {
+                const response = await axios.post(apiUrl, params.data, params.header);
+                return response.data;
+            }));
 
-            for(let index = 0; index < paramsList.length; index++){
-                await delay(100)
-                const response = await axios.post(apiUrl, paramsList[index].data, paramsList[index].header);
-            }
+            // for(let index = 0; index < paramsList.length; index++){
+            //     await delay(100)
+            //     const response = await axios.post(apiUrl, paramsList[index].data, paramsList[index].header);
+            // }
             
         }catch(error){
             console.log(error)
