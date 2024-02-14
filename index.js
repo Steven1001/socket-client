@@ -76,6 +76,9 @@ const startServer = async() => {
             const receiverQuery = `SELECT user_id, access_token FROM user_info WHERE id >= ? LIMIT ${limit}`
             const receivers = await db.query(receiverQuery, [receiverId])
 
+            console.log("senders", senders)
+            console.log("receivers" ,receivers)
+
             const paramsList = []
             for(let index = 0; index < senders.length; index++){
                 const params = {
