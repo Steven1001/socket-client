@@ -62,7 +62,7 @@ const startServer = async() => {
     })
 
     app.post('/aws/send/text', async (req, res) => {
-        // try{
+        try{
             const senderId = req.body.senderId
             const receiverId = req.body.receiverId
             const limit = req.body.limit
@@ -75,9 +75,6 @@ const startServer = async() => {
 
             const receiverQuery = `SELECT user_id, access_token FROM user_info WHERE id >= ? LIMIT ${limit}`
             const receivers = await db.query(receiverQuery, [receiverId])
-
-            console.log("senders", senders)
-            console.log("receivers" ,receivers)
 
             const paramsList = []
             for(let index = 0; index < senders.length; index++){
@@ -109,9 +106,9 @@ const startServer = async() => {
             //     const response = await axios.post(apiUrl, paramsList[index].data, paramsList[index].header);
             // }
             
-        // }catch(error){
-        //     console.log(error)
-        // }
+        }catch(error){
+            console.log(error)
+        }
         res.send(`Send text message.`)
     })
     
