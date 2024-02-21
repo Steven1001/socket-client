@@ -7,7 +7,7 @@ const sqlProperties = {
     database: "you_know_user_service",
     port: 6446,
     waitForConnections: true,
-    connectionLimit: 5,
+    connectionLimit: 100,
     queueLimit: 0,
     debug: false
 }
